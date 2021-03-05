@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "dynamo-io"
+version = "0.1.0"
+description = "Opinionated single-table library for DynamoDB with in-memory mocking capabilities for unit and scenario testing."
+authors = ["Scott Ernst <swernst@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+boto3 = "^1.17.21"
+toml = ">=0.10.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "yes"
+coverage = "yes"
+black = { version = "*", allow-prereleases = true }
+pytest-cov = "yes"
+flake8 = "yes"
+flake8-black = "yes"
+mypy = "yeas"
+taskipy = ">=1.4.0"
+aok = "yes"
+
+[tool.taskipy.tasks]
+# https://github.com/illBeRoy/taskipy
+black = "black ."
+mypy = "poetry run mypy ./dynamo_io/ --ignore-missing-imports"
+flake8 = "flake8 ."
+test = "pytest . --cov-report=term-missing --cov=."
+lint = "task black && task flake8 && task mypy"
+check = "task black && task flake8 && task mypy && task test"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
