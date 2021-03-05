@@ -46,7 +46,7 @@ def test_get_indexed_record():
             ":v0": {"S": "third:foo"},
             ":v1": {"S": "first:foo"},
         },
-        "KeyConditionExpression": "#k0=:v0, #k1=:v1",
+        "KeyConditionExpression": "#k0=:v0 AND #k1=:v1",
         "Limit": 1,
         "IndexName": "g1_partition",
     }

@@ -177,7 +177,7 @@ def get_indexed_rows(
     if index.sort_key and sort_key_value is not None:
         attribute_names["#k1"] = index.sort_key or ""
         attribute_values[":v1"] = {"S": str(sort_key_value)}
-        key_condition = f"{key_condition}, #k1=:v1"
+        key_condition = f"{key_condition} AND #k1=:v1"
 
     request: dict = {
         "TableName": table_name,
