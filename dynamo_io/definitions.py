@@ -241,47 +241,81 @@ class Index(typing.NamedTuple):
 
 
 STANDARD_INDEX = Index("standard", None, "pk", "sk")
+PARTITION_G1_INDEX = Index("partition_g1", "partition_g1", "pk", "g1k")
+PARTITION_G2_INDEX = Index("partition_g2", "partition_g2", "pk", "g2k")
+PARTITION_G3_INDEX = Index("partition_g3", "partition_g3", "pk", "g3k")
+
 INVERTED_INDEX = Index("inverted", "inverted", "sk", "pk")
+SORT_G1_INDEX = Index("sort_g1", "sort_g1", "sk", "g1k")
+SORT_G2_INDEX = Index("sort_g2", "sort_g2", "sk", "g2k")
+SORT_G3_INDEX = Index("sort_g3", "sort_g3", "sk", "g3k")
 
 G1_PARTITION_INDEX = Index("g1_partition", "g1_partition", "g1k", "pk")
-PARTITION_G1_INDEX = Index("partition_g1", "partition_g1", "pk", "g1k")
 G1_SORT_INDEX = Index("g1_sort", "g1_sort", "g1k", "sk")
-SORT_G1_INDEX = Index("sort_g1", "sort_g1", "sk", "g1k")
+G1_G2_INDEX = Index("g1_g2", "g1_g2", "g1", "g2")
+G1_G3_INDEX = Index("g1_g3", "g1_g3", "g1", "g3")
 
 G2_PARTITION_INDEX = Index("g2_partition", "g2_partition", "g2k", "pk")
-PARTITION_G2_INDEX = Index("partition_g2", "partition_g2", "pk", "g2k")
 G2_SORT_INDEX = Index("g2_sort", "g2_sort", "g2k", "sk")
-SORT_G2_INDEX = Index("sort_g2", "sort_g2", "sk", "g2k")
+G2_G1_INDEX = Index("g2_g1", "g2_g1", "g2", "g1")
+G2_G3_INDEX = Index("g2_g3", "g2_g3", "g2", "g3")
+
+G3_PARTITION_INDEX = Index("g3_partition", "g3_partition", "g3k", "pk")
+G3_SORT_INDEX = Index("g3_sort", "g3_sort", "g3k", "sk")
+G3_G1_INDEX = Index("g3_g1", "g3_g1", "g3", "g1")
+G3_G2_INDEX = Index("g3_g3", "g3_g3", "g3", "g3")
 
 
 class Indexes:
     """Possible indexes on tables, including GSI indexes."""
 
     STANDARD = STANDARD_INDEX
+    PARTITION_G1 = PARTITION_G1_INDEX
+    PARTITION_G2 = PARTITION_G2_INDEX
+    PARTITION_G3 = PARTITION_G3_INDEX
+
     INVERTED = INVERTED_INDEX
+    SORT_G1 = SORT_G1_INDEX
+    SORT_G2 = SORT_G2_INDEX
+    SORT_G3 = SORT_G3_INDEX
 
     G1_PARTITION = G1_PARTITION_INDEX
-    PARTITION_G1 = PARTITION_G1_INDEX
     G1_SORT = G1_SORT_INDEX
-    SORT_G1 = SORT_G1_INDEX
+    G1_G2 = G1_G2_INDEX
+    G1_G3 = G1_G3_INDEX
 
     G2_PARTITION = G2_PARTITION_INDEX
-    PARTITION_G2 = PARTITION_G2_INDEX
     G2_SORT = G2_SORT_INDEX
-    SORT_G2 = SORT_G2_INDEX
+    G2_G1 = G2_G1_INDEX
+    G2_G3 = G2_G3_INDEX
+
+    G3_PARTITION = G3_PARTITION_INDEX
+    G3_SORT = G3_SORT_INDEX
+    G3_G1 = G3_G1_INDEX
+    G3_G2 = G3_G2_INDEX
 
 
 INDEXES_LIST = [
     STANDARD_INDEX,
-    INVERTED_INDEX,
-    G1_PARTITION_INDEX,
     PARTITION_G1_INDEX,
-    G1_SORT_INDEX,
-    SORT_G1_INDEX,
-    G2_PARTITION_INDEX,
     PARTITION_G2_INDEX,
-    G2_SORT_INDEX,
+    PARTITION_G3_INDEX,
+    INVERTED_INDEX,
+    SORT_G1_INDEX,
     SORT_G2_INDEX,
+    SORT_G3_INDEX,
+    G1_PARTITION_INDEX,
+    G1_SORT_INDEX,
+    G1_G2_INDEX,
+    G1_G3_INDEX,
+    G2_PARTITION_INDEX,
+    G2_SORT_INDEX,
+    G2_G1_INDEX,
+    G2_G3_INDEX,
+    G3_PARTITION_INDEX,
+    G3_SORT_INDEX,
+    G3_G1_INDEX,
+    G3_G2_INDEX,
 ]
 
 
@@ -649,6 +683,24 @@ class GlobalSecondColumn:
     value_prefix: str
     #: Name of the key in the table
     key: str = dataclasses.field(default="g2k", init=False)
+    #: Whether or not the field is computed instead of stored directly in the
+    #: model. Computed fields will be written to the database record but not
+    #: loaded back into the model.
+    computed: bool = False
+    #: Data type for the column. Will always be of type String.
+    data_type: DynamoType = dataclasses.field(default=DynamoTypes.STRING, init=False)
+
+
+@dataclasses.dataclass(frozen=True)
+class GlobalThirdColumn:
+    """Data structure for a quaternary key column within a DynamoDB table."""
+
+    #: Name of the column.
+    name: str
+    #: Value prefix within the table records
+    value_prefix: str
+    #: Name of the key in the table
+    key: str = dataclasses.field(default="g3k", init=False)
     #: Whether or not the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.

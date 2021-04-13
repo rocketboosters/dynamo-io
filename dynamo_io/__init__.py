@@ -18,6 +18,7 @@ from dynamo_io.definitions import FloatColumn  # noqa: F401
 from dynamo_io.definitions import FloatSetColumn  # noqa: F401
 from dynamo_io.definitions import GlobalFirstColumn  # noqa: F401
 from dynamo_io.definitions import GlobalSecondColumn  # noqa: F401
+from dynamo_io.definitions import GlobalThirdColumn  # noqa: F401
 from dynamo_io.definitions import Index  # noqa: F401
 from dynamo_io.definitions import IndexedColumn  # noqa: F401
 from dynamo_io.definitions import Indexes  # noqa: F401
