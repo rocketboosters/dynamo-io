@@ -1,17 +1,27 @@
-import base64
+import datetime
 import typing
 
 from dynamo_io import definitions
-import datetime
 
 
-def stringify(
+def _as_bytes(raw: typing.Union[str, bytes]) -> bytes:
+    """Convert the source to bytes to conform to dynamoDB outputs."""
+    if isinstance(raw, bytes):
+        return raw
+
+    if isinstance(raw, str):
+        return raw.encode()
+
+    return raw
+
+
+def _to_primitive(
     value: typing.Any,
     dtype: definitions.DynamoType,
-) -> typing.Union[str, bool]:
+) -> typing.Union[str, bool, bytes]:
     """
-    Returns the specified value as a string with the necessary serialization
-    to be valid when written to a DynamoDB table.
+    Convert the specified value to its dynamoDB primitive value equivalent that is the
+    necessary serialization to be valid when written to a DynamoDB table.
     """
     types = definitions.DynamoTypes
 
@@ -36,7 +46,7 @@ def stringify(
         return str(int(value))
 
     if dtype.name in (types.BYTES.name, types.BINARY_SET.name):
-        return base64.b64encode(value).decode()
+        return _as_bytes(value)
 
     return str(value)
 
@@ -79,6 +89,6 @@ def serialize(
         }
         return {key: value}
     elif column.data_type in homogeneous_set_types:
-        return {key: [stringify(v, column.data_type) for v in value]}
+        return {key: [_to_primitive(v, column.data_type) for v in value]}
 
-    return {key: stringify(value, column.data_type)}
+    return {key: _to_primitive(value, column.data_type)}

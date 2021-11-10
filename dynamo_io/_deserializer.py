@@ -1,8 +1,18 @@
-import base64
 import datetime
 import typing
 
 from dynamo_io import definitions
+
+
+def _as_bytes(raw: typing.Union[str, bytes]) -> bytes:
+    """Convert the source to bytes to conform to dynamoDB outputs."""
+    if isinstance(raw, bytes):
+        return raw
+
+    if isinstance(raw, str):
+        return raw.encode()
+
+    return raw
 
 
 def unstringify(value: str, dtype: definitions.DynamoType) -> typing.Any:
@@ -30,7 +40,7 @@ def unstringify(value: str, dtype: definitions.DynamoType) -> typing.Any:
         return int(value)
 
     if dtype.name in (types.BYTES.name, types.BINARY_SET.name):
-        return base64.b64decode(value.encode())
+        return _as_bytes(value)
 
     return value
 

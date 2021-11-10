@@ -9,9 +9,14 @@ from dynamo_io import _deserializer
 SCENARIOS = (
     (True, True, dio.DynamoTypes.BOOLEAN),
     (False, False, dio.DynamoTypes.BOOLEAN),
-    ("YWJj", b"abc", dio.DynamoTypes.BYTES),
+    ("abc", b"abc", dio.DynamoTypes.BYTES),
     (
-        ["YWJj", "YWJj"],
+        ["abc", "abc"],
+        [b"abc", b"abc"],
+        dio.DynamoTypes.BINARY_SET,
+    ),
+    (
+        [b"abc", b"abc"],
         [b"abc", b"abc"],
         dio.DynamoTypes.BINARY_SET,
     ),

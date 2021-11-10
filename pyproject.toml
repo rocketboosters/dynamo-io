@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dynamo-io"
-version = "0.1.2"
+version = "0.2.0"
 description = "Opinionated single-table library for DynamoDB with in-memory mocking capabilities for unit and scenario testing."
 authors = ["Scott Ernst <swernst@gmail.com>"]
 license = "MIT"

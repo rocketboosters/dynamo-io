@@ -9,10 +9,16 @@ from dynamo_io import _serializer
 SCENARIOS = (
     (True, True, dio.DynamoTypes.BOOLEAN),
     (False, False, dio.DynamoTypes.BOOLEAN),
-    (b"abc", "YWJj", dio.DynamoTypes.BYTES),
+    (b"abc", b"abc", dio.DynamoTypes.BYTES),
+    ("abc", b"abc", dio.DynamoTypes.BYTES),
+    (
+        ["abc", "abc"],
+        [b"abc", b"abc"],
+        dio.DynamoTypes.BINARY_SET,
+    ),
     (
         [b"abc", b"abc"],
-        ["YWJj", "YWJj"],
+        [b"abc", b"abc"],
         dio.DynamoTypes.BINARY_SET,
     ),
     (datetime.date(2021, 2, 3), "2021-02-03", dio.DynamoTypes.DATE),
