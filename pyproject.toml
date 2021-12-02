@@ -17,18 +17,20 @@ black = { version = "*", allow-prereleases = true }
 pytest-cov = "yes"
 flake8 = "yes"
 flake8-black = "yes"
-mypy = "yeas"
+mypy = ">=0.900"
 taskipy = ">=1.4.0"
 aok = "yes"
+radon = "^5.1.0"
 
 [tool.taskipy.tasks]
 # https://github.com/illBeRoy/taskipy
 black = "black ."
-mypy = "poetry run mypy ./dynamo_io/ --ignore-missing-imports"
+mypy = "mypy . --install-types --non-interactive --ignore-missing-imports"
 flake8 = "flake8 ."
+radon = "radon cc . && radon mi ."
 test = "pytest . --cov-report=term-missing --cov=."
 lint = "task black && task flake8 && task mypy"
-check = "task black && task flake8 && task mypy && task test"
+check = "task black && task flake8 && task mypy && task radon && task test"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

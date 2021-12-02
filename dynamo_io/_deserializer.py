@@ -45,6 +45,20 @@ def unstringify(value: str, dtype: definitions.DynamoType) -> typing.Any:
     return value
 
 
+def _deserialize_map_column(
+    raw: typing.Any,
+    column: "definitions.MapColumn",
+) -> typing.Dict[str, typing.Any]:
+    """Deserialize a map column into a flattened dictionary."""
+    children = typing.cast(typing.Tuple[definitions.ColumnType, ...], column.children)
+    raw_children = typing.cast(typing.Dict[str, typing.Any], raw)
+    return {
+        child.name: deserialize(raw_children[child.name], child)
+        for child in children
+        if child and raw_children[child.name] not in (None, "")
+    }
+
+
 def deserialize(
     value: typing.Dict[str, typing.Union[str, list, dict, bool]],
     column: definitions.ColumnType = None,
@@ -63,15 +77,7 @@ def deserialize(
     )
 
     if isinstance(column, definitions.MapColumn):
-        children = typing.cast(
-            typing.Tuple[definitions.ColumnType, ...], column.children
-        )
-        raw_children = typing.cast(typing.Dict[str, typing.Any], raw)
-        return {
-            child.name: deserialize(raw_children[child.name], child)
-            for child in children
-            if child and raw_children[child.name] not in (None, "")
-        }
+        return _deserialize_map_column(raw, column)
     elif column.data_type == definitions.DynamoTypes.MAP:
         lookups = definitions.TYPE_REVERSE_LOOKUP
         return {

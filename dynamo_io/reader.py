@@ -57,7 +57,7 @@ def get_rows_for_partition(
     attribute_values = {":v0": {"S": str(partition_key_value)}}
     key_condition = "#k0=:v0"
 
-    if index.sort_key:
+    if index.sort_key and sort_key_starts:
         attribute_names["#k1"] = index.sort_key
         attribute_values[":v1"] = {"S": str(sort_key_starts)}
         key_condition += " AND begins_with ( #k1, :v1 )"

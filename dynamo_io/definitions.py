@@ -333,7 +333,7 @@ class ColumnType(typing.Protocol):
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -350,7 +350,7 @@ class Column:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -365,7 +365,7 @@ class StringColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -382,7 +382,7 @@ class BooleanColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -399,7 +399,7 @@ class BinarySetColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -418,7 +418,7 @@ class BytesColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -435,7 +435,7 @@ class DateColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -452,7 +452,7 @@ class DatetimeColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -469,7 +469,7 @@ class ListColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -486,7 +486,7 @@ class FloatColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -503,7 +503,7 @@ class FloatSetColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -520,7 +520,7 @@ class IntegerColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -537,7 +537,7 @@ class IntegerSetColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -557,7 +557,7 @@ class MapColumn:
     children: typing.Tuple[Column, ...]
     #: Name of the key in the table
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -574,7 +574,7 @@ class StringSetColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -593,7 +593,7 @@ class TimestampColumn:
     #: Name of the key in the table. If not specified the name will match
     #: the name value. Use this for additional keys.
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -611,7 +611,7 @@ class IndexedColumn:
     value_prefix: str
     #: Name of the key in the table
     key: typing.Optional[str] = None
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -629,7 +629,7 @@ class PartitionColumn:
     value_prefix: str
     #: Name of the key in the table
     key: str = dataclasses.field(default="pk", init=False)
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -647,7 +647,7 @@ class SortColumn:
     value_prefix: str
     #: Name of the key in the table
     key: str = dataclasses.field(default="sk", init=False)
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -683,7 +683,7 @@ class GlobalSecondColumn:
     value_prefix: str
     #: Name of the key in the table
     key: str = dataclasses.field(default="g2k", init=False)
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -701,7 +701,7 @@ class GlobalThirdColumn:
     value_prefix: str
     #: Name of the key in the table
     key: str = dataclasses.field(default="g3k", init=False)
-    #: Whether or not the field is computed instead of stored directly in the
+    #: Whether the field is computed instead of stored directly in the
     #: model. Computed fields will be written to the database record but not
     #: loaded back into the model.
     computed: bool = False
@@ -738,25 +738,42 @@ class Schema:
         :param row:
             A DynamoDB row record.
         """
+        pk_name = self._is_partition_key_prefix_match(row)
+        if pk_name is None:
+            return False
+
+        sk_prefix_match, sk_name = self._is_sort_key_prefix_match(row)
+        if not sk_prefix_match:
+            return False
+
+        return self._is_exact_match(row, pk_name, sk_name)
+
+    def _is_partition_key_prefix_match(self, row: dict) -> typing.Optional[str]:
+        """Match the partition key with the row and return the comparison."""
         partition_key_name = self.partition_key.key or "pk"
         partition_key = row[partition_key_name]["S"]
-        if not partition_key.startswith(self.partition_key.value_prefix):
-            return False
+        is_match = partition_key.startswith(self.partition_key.value_prefix)
+        return partition_key_name if is_match else None
 
-        sort_key_name = self.sort_key.key if self.sort_key else None
-        sort_key_name = sort_key_name or "sk"
+    def _is_sort_key_prefix_match(self, row: dict) -> typing.Tuple[bool, str]:
+        """Match the sort key with the row and return the comparison."""
+        sort_key_name = getattr(self.sort_key, "key", None) or "sk"
         sort_key = row.get(sort_key_name, {}).get("S")
-        if sort_key is not None and not self.sort_key:
-            return False
+        value_prefix = getattr(self.sort_key, "value_prefix", None)
+        is_mismatch = (
+            (sort_key is None and self.sort_key)
+            or (sort_key is not None and not self.sort_key)
+            or (sort_key and value_prefix and not sort_key.startswith(value_prefix))
+        )
+        return not is_mismatch, sort_key_name
 
-        if self.sort_key and sort_key is None:
-            return False
-
-        value_prefix = self.sort_key.value_prefix if self.sort_key else None
-        if sort_key and value_prefix and not sort_key.startswith(value_prefix):
-            return False
-
-        # Only match if all keys in the row are present in the schema.
+    def _is_exact_match(
+        self,
+        row: dict,
+        partition_key_name: str,
+        sort_key_name: str,
+    ) -> bool:
+        """Only match if all keys in the row are present in the schema."""
         key_names = (partition_key_name, sort_key_name)
         schema_keys = {c.key or c.name for c in self.all_columns}
         row_keys = {k for k in row.keys() if k not in key_names}
