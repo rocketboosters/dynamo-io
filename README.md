@@ -9,3 +9,13 @@
 [![PyPI - License](https://img.shields.io/pypi/l/dynamo-io)](https://pypi.org/project/dynamo-io/)
 
 DynamoDB IO for single-table backend application stores.
+
+[[_TOC_]]
+
+# Usage
+
+## Reading Actions
+
+### Reading Records for a Partition
+
+xxx
