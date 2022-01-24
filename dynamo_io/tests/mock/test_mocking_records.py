@@ -129,6 +129,16 @@ def test_e2e():
     )
     assert len(result.records) == 2
 
+    result = dio.get_records_for_partition(
+        client=client,
+        table_name="NA",
+        partition_key_value="cat:candy",
+        before_sort_key="prod:n",
+        index=dio.Indexes.G1_PARTITION,
+        record_classes=[Product],
+    )
+    assert len(result.records) == 3
+
     result = dio.get_indexed_record(
         client=client,
         table_name="NA",

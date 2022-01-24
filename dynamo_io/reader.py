@@ -44,15 +44,29 @@ def get_record(
     )
 
 
-def get_rows_for_partition(
-    client: BaseClient,
-    table_name: str,
+def _assemble_get_rows_for_partition_key_params(
+    index: definitions.Index,
     partition_key_value: str,
-    sort_key_starts: str = None,
-    index: definitions.Index = definitions.Indexes.STANDARD,
-    limit: int = 0,
-) -> definitions.PagedRowResponse:
-    """..."""
+    sort_key_starts: typing.Optional[str],
+    before_sort_key: typing.Optional[str],
+    after_sort_key: typing.Optional[str],
+) -> typing.Tuple[dict, dict, str]:
+    """
+    Assemble the attribute names, values and key expression required for dynamo.
+
+    :param index:
+        Object describing the indexes of the dynamo table.
+    :param partition_key_value:
+        The value defining the partition to query.
+    :param sort_key_starts:
+        The value the sort key must begin with.
+    :param before_sort_key:
+        The sort key value that all records must be before.
+    :param after_sort_key:
+        The sort key value that all records must be after.
+    :return:
+        A tuple of attribute_names, attribute_values, and key_conditions.
+    """
     attribute_names = {"#k0": index.partition_key}
     attribute_values = {":v0": {"S": str(partition_key_value)}}
     key_condition = "#k0=:v0"
@@ -61,6 +75,63 @@ def get_rows_for_partition(
         attribute_names["#k1"] = index.sort_key
         attribute_values[":v1"] = {"S": str(sort_key_starts)}
         key_condition += " AND begins_with ( #k1, :v1 )"
+
+    if index.sort_key and before_sort_key:
+        attribute_names["#k2"] = index.sort_key
+        attribute_values[":v2"] = {"S": str(before_sort_key)}
+        key_condition += " AND #k2 < :v2"
+
+    if index.sort_key and after_sort_key:
+        attribute_names["#k3"] = index.sort_key
+        attribute_values[":v3"] = {"S": str(after_sort_key)}
+        key_condition += " AND #k3 > :v3"
+
+    return attribute_names, attribute_values, key_condition
+
+
+def get_rows_for_partition(
+    client: BaseClient,
+    table_name: str,
+    partition_key_value: str,
+    sort_key_starts: str = None,
+    before_sort_key: str = None,
+    after_sort_key: str = None,
+    index: definitions.Index = definitions.Indexes.STANDARD,
+    limit: int = 0,
+) -> definitions.PagedRowResponse:
+    """
+    Get the raw dynamodb rows from the specified partition.
+
+    :param client:
+        The client to use in pulling the rows from dynamodb.
+    :param table_name:
+        The table to pull rows from.
+    :param partition_key_value:
+        The value defining the partition to query.
+    :param sort_key_starts:
+        The value the sort key must begin with.
+    :param before_sort_key:
+        The sort key value that all records must be before.
+    :param after_sort_key:
+        The sort key value that all records must be after.
+    :param index:
+        Object describing the indexes of the dynamo table.
+    :param limit:
+        The number of rows to pull.
+    :return:
+        A paged row response for the specified rows.
+    """
+    (
+        attribute_names,
+        attribute_values,
+        key_condition,
+    ) = _assemble_get_rows_for_partition_key_params(
+        index,
+        partition_key_value,
+        sort_key_starts,
+        before_sort_key,
+        after_sort_key,
+    )
 
     request: dict = {
         "TableName": table_name,
@@ -95,6 +166,8 @@ def get_records_for_partition(
     table_name: str,
     partition_key_value: str,
     sort_key_starts: str = None,
+    before_sort_key: str = None,
+    after_sort_key: str = None,
     index: definitions.Index = definitions.Indexes.STANDARD,
     record_classes: typing.List[typing.Type["recorder.Record"]] = None,
     limit: int = 0,
@@ -105,6 +178,8 @@ def get_records_for_partition(
         table_name=table_name,
         partition_key_value=partition_key_value,
         sort_key_starts=sort_key_starts,
+        before_sort_key=before_sort_key,
+        after_sort_key=after_sort_key,
         index=index,
         limit=limit,
     )
