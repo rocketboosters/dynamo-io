@@ -16,7 +16,7 @@ jobs:
       with:
         python-version: '3.14'
     - name: Install black
-      run: pip install black
+      run: pip install black --pre
     - name: Check code formatting
       run: black --check .
 
@@ -29,7 +29,7 @@ jobs:
       with:
         python-version: '3.14'
     - name: Install flake8
-      run: pip install flake8 flake8-black
+      run: pip install flake8 flake8-black --pre
     - name: Run flake8
       run: flake8 .
 
