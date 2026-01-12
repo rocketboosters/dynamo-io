@@ -11,8 +11,7 @@ class ResponseType(typing.Protocol):
 
     request: dict
 
-    def to_debug_dict(self) -> typing.Dict[str, typing.Any]:
-        ...
+    def to_debug_dict(self) -> typing.Dict[str, typing.Any]: ...
 
 
 @dataclasses.dataclass(frozen=True)
@@ -31,7 +30,7 @@ class Response:
 
 @dataclasses.dataclass(frozen=True)
 class SingleRowResponse(Response):
-    """..."""
+    """Response containing a single row from a DynamoDB operation."""
 
     row: typing.Optional[typing.Dict[typing.Any, typing.Any]]
 
@@ -54,7 +53,7 @@ class SingleRowResponse(Response):
 
 @dataclasses.dataclass(frozen=True)
 class PagedRowResponse:
-    """..."""
+    """Response containing multiple rows from a paginated DynamoDB query."""
 
     request: dict
     pages: typing.Tuple[dict, ...]
@@ -84,7 +83,7 @@ class PagedRowResponse:
 
 @dataclasses.dataclass(frozen=True)
 class ScannedRowResponse(PagedRowResponse):
-    """..."""
+    """Response containing rows from a DynamoDB table scan operation."""
 
     completed: bool
 
@@ -105,7 +104,7 @@ class ScannedRowResponse(PagedRowResponse):
 
 
 class SpecialOperation(typing.NamedTuple):
-    """..."""
+    """Represents a special DynamoDB operation like delete."""
 
     operation: str
 
@@ -114,7 +113,7 @@ DELETE = SpecialOperation(operation="delete")
 
 
 class TypeHints:
-    """..."""
+    """Type hint definitions for DynamoDB data types and operations."""
 
     Boolean = typing.Optional[typing.Union[bool, SpecialOperation]]
     BinarySet = typing.Optional[
@@ -709,6 +708,18 @@ class GlobalThirdColumn:
     data_type: DynamoType = dataclasses.field(default=DynamoTypes.STRING, init=False)
 
 
+# Type alias for any column type including key columns
+AnyColumnType = typing.Union[
+    ColumnType,
+    PartitionColumn,
+    SortColumn,
+    IndexedColumn,
+    GlobalFirstColumn,
+    GlobalSecondColumn,
+    GlobalThirdColumn,
+]
+
+
 @dataclasses.dataclass(frozen=True)
 class Schema:
     """Data structure defining a DynamoDB table"""
@@ -727,7 +738,7 @@ class Schema:
     )
 
     @property
-    def all_columns(self) -> typing.Tuple[ColumnType, ...]:
+    def all_columns(self) -> tuple[ColumnType | Column, ...]:
         """Custom and common columns."""
         return tuple(list(self.columns) + list(self.common))
 

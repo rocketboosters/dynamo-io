@@ -12,7 +12,17 @@ def get_row(
     partition_key_value: str,
     sort_key_value: typing.Optional[str],
 ) -> definitions.SingleRowResponse:
-    """..."""
+    """Retrieve a single row from a DynamoDB table by its primary key.
+
+    Args:
+        client: The boto3 DynamoDB client.
+        table_name: The name of the DynamoDB table.
+        partition_key_value: The partition key value to query.
+        sort_key_value: Optional sort key value for the item.
+
+    Returns:
+        SingleRowResponse containing the request, response, and row data.
+    """
     key = {"pk": {"S": str(partition_key_value)}}
     if sort_key_value is not None:
         key["sk"] = {"S": str(sort_key_value)}
@@ -32,7 +42,16 @@ def get_record(
     table_name: str,
     source: "recorder.Record",
 ) -> recorder.SingleRecordResponse:
-    """..."""
+    """Retrieve a single record from a DynamoDB table using a source record's keys.
+
+    Args:
+        client: The boto3 DynamoDB client.
+        table_name: The name of the DynamoDB table.
+        source: The record containing the key values to query.
+
+    Returns:
+        SingleRecordResponse containing the deserialized record if found.
+    """
     response = get_row(
         client, table_name, source.partition_key_value, source.sort_key_value
     )
@@ -93,9 +112,9 @@ def get_rows_for_partition(
     client: BaseClient,
     table_name: str,
     partition_key_value: str,
-    sort_key_starts: str = None,
-    before_sort_key: str = None,
-    after_sort_key: str = None,
+    sort_key_starts: str | None = None,
+    before_sort_key: str | None = None,
+    after_sort_key: str | None = None,
     index: definitions.Index = definitions.Indexes.STANDARD,
     limit: int = 0,
 ) -> definitions.PagedRowResponse:
@@ -165,14 +184,29 @@ def get_records_for_partition(
     client: BaseClient,
     table_name: str,
     partition_key_value: str,
-    sort_key_starts: str = None,
-    before_sort_key: str = None,
-    after_sort_key: str = None,
+    sort_key_starts: str | None = None,
+    before_sort_key: str | None = None,
+    after_sort_key: str | None = None,
     index: definitions.Index = definitions.Indexes.STANDARD,
-    record_classes: typing.List[typing.Type["recorder.Record"]] = None,
+    record_classes: typing.List[typing.Type["recorder.Record"]] | None = None,
     limit: int = 0,
 ) -> recorder.PagedRecordResponse:
-    """..."""
+    """Retrieve multiple records for a partition key from a DynamoDB table.
+
+    Args:
+        client: The boto3 DynamoDB client.
+        table_name: The name of the DynamoDB table.
+        partition_key_value: The partition key value to query.
+        sort_key_starts: Optional prefix for the sort key to filter results.
+        before_sort_key: Optional upper bound for the sort key range.
+        after_sort_key: Optional lower bound for the sort key range.
+        index: The index to query (defaults to STANDARD).
+        record_classes: Optional list of record classes to match against rows.
+        limit: Optional limit on the number of items to return (0 means no limit).
+
+    Returns:
+        PagedRecordResponse containing all matching records.
+    """
     result = get_rows_for_partition(
         client=client,
         table_name=table_name,
@@ -244,7 +278,19 @@ def get_indexed_rows(
     index: definitions.Index = definitions.Indexes.STANDARD,
     limit: int = 1,
 ) -> definitions.PagedRowResponse:
-    """..."""
+    """Query rows from a DynamoDB table index by partition and sort keys.
+
+    Args:
+        client: The boto3 DynamoDB client.
+        table_name: The name of the DynamoDB table.
+        partition_key_value: The partition key value to query.
+        sort_key_value: Optional sort key value to query.
+        index: The index to query (defaults to STANDARD).
+        limit: Maximum number of items to return (defaults to 1).
+
+    Returns:
+        PagedRowResponse containing the matching rows.
+    """
     attribute_names = {"#k0": index.partition_key}
     attribute_values = {":v0": {"S": str(partition_key_value)}}
     key_condition = "#k0=:v0"
@@ -288,7 +334,18 @@ def get_indexed_row(
     sort_key_value: str,
     index: definitions.Index = definitions.Indexes.STANDARD,
 ) -> definitions.SingleRowResponse:
-    """..."""
+    """Retrieve a single row from a DynamoDB table index.
+
+    Args:
+        client: The boto3 DynamoDB client.
+        table_name: The name of the DynamoDB table.
+        partition_key_value: The partition key value to query.
+        sort_key_value: The sort key value to query.
+        index: The index to query (defaults to STANDARD).
+
+    Returns:
+        SingleRowResponse containing the first matching row.
+    """
     result = get_indexed_rows(
         client=client,
         table_name=table_name,
@@ -311,7 +368,18 @@ def get_indexed_records(
     index: definitions.Index = definitions.Indexes.STANDARD,
     limit: int = 1,
 ) -> recorder.PagedRecordResponse:
-    """..."""
+    """Query records from a DynamoDB table index using a source record.
+
+    Args:
+        client: The boto3 DynamoDB client.
+        table_name: The name of the DynamoDB table.
+        source: The record containing the key values to query.
+        index: The index to query (defaults to STANDARD).
+        limit: Maximum number of items to return (defaults to 1).
+
+    Returns:
+        PagedRecordResponse containing the matching deserialized records.
+    """
     columns = [
         source.schema.partition_key,
         source.schema.sort_key,
@@ -350,7 +418,17 @@ def get_indexed_record(
     source: "recorder.Record",
     index: definitions.Index = definitions.Indexes.STANDARD,
 ) -> recorder.SingleRecordResponse:
-    """..."""
+    """Retrieve a single record from a DynamoDB table index using a source record.
+
+    Args:
+        client: The boto3 DynamoDB client.
+        table_name: The name of the DynamoDB table.
+        source: The record containing the key values to query.
+        index: The index to query (defaults to STANDARD).
+
+    Returns:
+        SingleRecordResponse containing the first matching deserialized record.
+    """
     result = get_indexed_records(
         client=client,
         table_name=table_name,

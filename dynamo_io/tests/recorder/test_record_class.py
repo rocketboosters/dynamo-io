@@ -114,9 +114,7 @@ def test_from_row():
     assert new_record.second_key == record.second_key
     assert new_record.foo_bar == record.foo_bar
     assert new_record.bar == record.bar
-    assert (
-        new_record.baz is None
-    ), """
+    assert new_record.baz is None, """
         Expect the special operation to be ignored and the value
         set to None through the to and from record process.
         """

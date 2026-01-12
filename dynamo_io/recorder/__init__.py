@@ -2,12 +2,14 @@ import dataclasses
 import datetime
 import typing
 
-from dynamo_io import definitions, _deserializer, _serializer
+from dynamo_io import _deserializer
+from dynamo_io import _serializer
+from dynamo_io import definitions
 
 
 @dataclasses.dataclass(frozen=True)
 class SingleRecordResponse(definitions.SingleRowResponse):
-    """..."""
+    """Response containing a single record from a DynamoDB operation."""
 
     record: typing.Optional["Record"]
 
@@ -20,7 +22,7 @@ class SingleRecordResponse(definitions.SingleRowResponse):
 
 @dataclasses.dataclass(frozen=True)
 class PagedRecordResponse(definitions.PagedRowResponse):
-    """..."""
+    """Response containing multiple records from a paginated DynamoDB query."""
 
     records: typing.Tuple["Record", ...]
 
@@ -42,7 +44,7 @@ class PagedRecordResponse(definitions.PagedRowResponse):
 
 @dataclasses.dataclass(frozen=True)
 class ScannedRecordResponse(definitions.ScannedRowResponse):
-    """..."""
+    """Response containing records from a DynamoDB table scan operation."""
 
     records: typing.Tuple["Record", ...]
 
@@ -163,7 +165,7 @@ class Record:
 
     def get_value_for(
         self,
-        column: typing.Optional[definitions.ColumnType],
+        column: definitions.AnyColumnType | None,
     ) -> typing.Any:
         """
         Retrieves the value for the specified column, defaulting where such

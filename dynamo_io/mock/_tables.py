@@ -1,10 +1,10 @@
 import typing
 from fnmatch import fnmatch
 
+from dynamo_io import _deserializer
 from dynamo_io import definitions
 from dynamo_io import recorder
 from dynamo_io.mock import _expressions
-from dynamo_io import _deserializer
 
 
 class Key(typing.NamedTuple):
@@ -156,8 +156,8 @@ class MockTable:
         self,
         pk: str,
         sk: str,
-        g1k: str = None,
-        g2k: str = None,
+        g1k: str | None = None,
+        g2k: str | None = None,
         **kwargs: typing.Dict[str, typing.Any],
     ) -> "MockTable":
         row: typing.Dict[str, typing.Any] = {
@@ -259,7 +259,7 @@ class MockTable:
     def get_rows(
         self,
         partition_key_value: str,
-        sort_key_starts: str = None,
+        sort_key_starts: str | None = None,
     ) -> typing.List[Row]:
         """
         Returns a list of rows that share the specified partition key value.
@@ -289,9 +289,7 @@ class MockTable:
 
     def assert_has_key(self, key: Key):
         """Raises an assertion error if the key does not exist in the table."""
-        assert (
-            key in self.rows
-        ), f"""
+        assert key in self.rows, f"""
             Expected to find a row in the table with the key:
               - Partition Key Value: "{key.partition_key_value}"
               - Sort Key Value: "{key.sort_key_value}"
@@ -300,9 +298,7 @@ class MockTable:
     def assert_row_values(self, key: Key, comparisons: dict):
         """Raises an assertion error if the comparison do not match the row."""
         row = self.rows.get(key)
-        assert (
-            row is not None
-        ), f"""
+        assert row is not None, f"""
             Expected to find a row in the table with the key:
               - Partition Key Value: "{key.partition_key_value}"
               - Sort Key Value: "{key.sort_key_value}"
@@ -315,9 +311,7 @@ class MockTable:
                 v(k, r.get(k))
                 continue
 
-            assert (
-                r.get(k) == v
-            ), f"""
+            assert r.get(k) == v, f"""
                 Expected the row value for "{k}" to be "{v}", but instead
                 it was "{r.get(k)}".
                 """
@@ -340,9 +334,7 @@ class MockTable:
             if key.partition_key_value == partition_key_value
             and key.sort_starts(sort_key_starts or "")
         ]
-        assert (
-            allow_no_matches or len(matching_keys) > 0
-        ), f"""
+        assert allow_no_matches or len(matching_keys) > 0, f"""
             Expected to find 1 or more matching rows with the partition
             key value "{partition_key_value}" and with sort keys starting
             with "{sort_key_starts or ''}".

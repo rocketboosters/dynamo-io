@@ -86,7 +86,16 @@ def remove(
     table_name: str,
     record: "recorder.Record",
 ) -> "definitions.Response":
-    """..."""
+    """Delete a record from a DynamoDB table.
+
+    Args:
+        client: The boto3 DynamoDB client.
+        table_name: The name of the DynamoDB table.
+        record: The record to delete from the table.
+
+    Returns:
+        Response object containing the request and response data.
+    """
     request = {"TableName": table_name, "Key": record.table_key}
     response = client.delete_item(**request)
     return definitions.Response(
@@ -98,11 +107,22 @@ def remove(
 def transacts(
     client: BaseClient,
     table_name: str,
-    puts: typing.Iterable["recorder.Record"] = None,
-    updates: typing.Iterable["recorder.Record"] = None,
-    deletes: typing.Iterable["recorder.Record"] = None,
+    puts: typing.Iterable["recorder.Record"] | None = None,
+    updates: typing.Iterable["recorder.Record"] | None = None,
+    deletes: typing.Iterable["recorder.Record"] | None = None,
 ) -> "definitions.Response":
-    """..."""
+    """Execute multiple DynamoDB operations as a single transaction.
+
+    Args:
+        client: The boto3 DynamoDB client.
+        table_name: The name of the DynamoDB table.
+        puts: Optional iterable of records to insert or replace.
+        updates: Optional iterable of records to update.
+        deletes: Optional iterable of records to delete.
+
+    Returns:
+        Response object containing the request and response data for the transaction.
+    """
     put_items = [
         {
             "Put": dict(

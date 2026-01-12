@@ -53,8 +53,8 @@ def _to_primitive(
 
 def serialize(
     value: typing.Any,
-    column: definitions.ColumnType,
-) -> typing.Optional[typing.Dict[str, typing.Any]]:
+    column: definitions.AnyColumnType,
+) -> typing.Dict[str, typing.Any] | None:
     """
     Returns a serialized attribute value for DynamoDB or None if the value is
     None or an empty string. Attribute values are dictionaries of the form:
@@ -83,7 +83,9 @@ def serialize(
 
     if isinstance(column, definitions.MapColumn):
         value = {
-            child.name: serialize(value[child.name], child)
+            child.name: serialize(
+                value[child.name], typing.cast(definitions.AnyColumnType, child)
+            )
             for child in column.children
             if value[child.name] not in (None, "")
         }

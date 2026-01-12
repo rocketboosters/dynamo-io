@@ -4,12 +4,12 @@ from importlib import metadata as _metadata
 
 import toml as _toml
 
+from dynamo_io.definitions import DELETE  # noqa: F401
 from dynamo_io.definitions import BinarySetColumn  # noqa: F401
 from dynamo_io.definitions import BooleanColumn  # noqa: F401
 from dynamo_io.definitions import BytesColumn  # noqa: F401
 from dynamo_io.definitions import Column  # noqa: F401
 from dynamo_io.definitions import ColumnType  # noqa: F401
-from dynamo_io.definitions import DELETE  # noqa: F401
 from dynamo_io.definitions import DateColumn  # noqa: F401
 from dynamo_io.definitions import DatetimeColumn  # noqa: F401
 from dynamo_io.definitions import DynamoType  # noqa: F401
@@ -57,7 +57,7 @@ from dynamo_io.writer import upsert  # noqa: F401
 SchemaType = _typing.ClassVar[Schema]
 
 try:
-    __version__ = _metadata.version(__package__)
+    __version__ = _metadata.version(__package__)  # type: ignore
 except _metadata.PackageNotFoundError:  # pragma: no cover
     # If the package is not installed such that it has distribution metadata
     # fallback to loading the version from the pyproject.toml file.

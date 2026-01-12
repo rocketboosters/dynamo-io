@@ -1,25 +1,25 @@
 [tool.poetry]
 name = "dynamo-io"
-version = "0.2.2"
+version = "0.3.0"
 description = "Opinionated single-table library for DynamoDB with in-memory mocking capabilities for unit and scenario testing."
 authors = ["Scott Ernst <swernst@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.11,<4.0"
 boto3 = "^1.17.21"
 toml = ">=0.10.0"
 
-[tool.poetry.dev-dependencies]
-pytest = "yes"
-coverage = "yes"
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+coverage = "*"
 black = { version = "*", allow-prereleases = true }
-pytest-cov = "yes"
-flake8 = "yes"
-flake8-black = "yes"
+pytest-cov = "*"
+flake8 = "*"
+flake8-black = "*"
 mypy = ">=0.900"
 taskipy = ">=1.4.0"
-aok = "yes"
+aok = "*"
 radon = "^5.1.0"
 
 [tool.taskipy.tasks]

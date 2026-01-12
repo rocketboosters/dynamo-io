@@ -16,13 +16,20 @@ def _as_bytes(raw: typing.Union[str, bytes]) -> bytes:
 
 
 def unstringify(value: str, dtype: definitions.DynamoType) -> typing.Any:
-    """..."""
+    """Convert a string value to its native Python type based on the DynamoDB type.
+
+    Args:
+        value: The string value to convert.
+        dtype: The DynamoDB type definition indicating the target type.
+
+    Returns:
+        The value converted to its native Python type (datetime, bool, float, int,
+        bytes, etc.).
+    """
     types = definitions.DynamoTypes
 
     if dtype.name == types.TIMESTAMP.name:
-        return datetime.datetime.utcfromtimestamp(int(value)).replace(
-            tzinfo=datetime.timezone.utc
-        )
+        return datetime.datetime.fromtimestamp(int(value), datetime.timezone.utc)
 
     if dtype.name == types.DATETIME.name:
         return datetime.datetime.fromisoformat("{}+00:00".format(value.rstrip("Z")))
@@ -61,9 +68,18 @@ def _deserialize_map_column(
 
 def deserialize(
     value: typing.Dict[str, typing.Union[str, list, dict, bool]],
-    column: definitions.ColumnType = None,
+    column: definitions.AnyColumnType | None = None,
 ) -> typing.Any:
-    """..."""
+    """Deserialize a DynamoDB value into its native Python representation.
+
+    Args:
+        value: The raw DynamoDB value dictionary containing type and value information.
+        column: Optional column definition specifying the data type and structure.
+
+    Returns:
+        The deserialized Python value, or None if the column or value is None.
+        Handles maps, sets, and scalar types according to the column definition.
+    """
     if column is None or value[column.data_type.value] is None:
         return None
 
@@ -83,9 +99,12 @@ def deserialize(
         return {
             k: deserialize(
                 data,
-                definitions.Column(
-                    name=k,
-                    data_type=lookups[list(data.keys())[0]],
+                typing.cast(
+                    definitions.AnyColumnType,
+                    definitions.Column(
+                        name=k,
+                        data_type=lookups[list(data.keys())[0]],
+                    ),
                 ),
             )
             for k, data in typing.cast(typing.Dict[str, dict], raw).items()

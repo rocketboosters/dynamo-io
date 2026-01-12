@@ -7,7 +7,7 @@ Assertion = typing.Callable[[str, str], None]
 
 
 def _from_iso(
-    iso_value: typing.Union[str, datetime.datetime]
+    iso_value: typing.Union[str, datetime.datetime],
 ) -> typing.Optional[datetime.datetime]:
     """Converts and ISO string into a Datetime object."""
     if not iso_value:
@@ -22,14 +22,14 @@ def _from_iso(
 
 
 def is_iso(
-    min_value: datetime.datetime = None,
-    max_value: datetime.datetime = None,
-    year: int = None,
-    month: int = None,
-    day: int = None,
-    hour: int = None,
-    minute: int = None,
-    second: int = None,
+    min_value: datetime.datetime | None = None,
+    max_value: datetime.datetime | None = None,
+    year: int | None = None,
+    month: int | None = None,
+    day: int | None = None,
+    hour: int | None = None,
+    minute: int | None = None,
+    second: int | None = None,
     nullable: bool = False,
 ) -> Assertion:
     """
@@ -70,7 +70,9 @@ def is_iso(
     return assert_is_iso
 
 
-def is_match(regex: str, nullable: bool = False, groups: dict = None) -> Assertion:
+def is_match(
+    regex: str, nullable: bool = False, groups: dict | None = None
+) -> Assertion:
     """Determines if the value matches the regular expression."""
 
     def assert_is_match(key: str, value: str):
@@ -83,9 +85,7 @@ def is_match(regex: str, nullable: bool = False, groups: dict = None) -> Asserti
         assert match is not None, f'{prefix} to match the pattern "{regex}".'
 
         for group_key, group_value in (groups or {}).items():
-            assert (
-                match["group"] == group_value
-            ), f"""
+            assert match["group"] == group_value, f"""
                 {prefix} to have the matching group "{group_key}" to
                 have the value "{group_value}" and not "{match['group']}".
                 """
@@ -108,9 +108,7 @@ def is_like(
             return
 
         test = fnmatch.fnmatch if ignore_case else fnmatch.fnmatchcase
-        assert test(
-            value, comparison
-        ), f"""
+        assert test(value, comparison), f"""
             Expected the value of the "{key}" to match the specified
             comparison "{comparison}" != "{value}".
             """
@@ -128,9 +126,7 @@ def is_optional(comparison: str) -> Assertion:
         if value is None:
             return
 
-        assert (
-            value == comparison
-        ), f"""
+        assert value == comparison, f"""
             Expected the value of "{key}" to match the specified
             value of "{comparison}" instead of "{value}".
             """
@@ -151,9 +147,7 @@ def is_in(allowed: typing.List[typing.Any]) -> Assertion:
     """Allows any of the values in the specified list."""
 
     def assert_id_in(key: str, value: str):
-        assert (
-            value in allowed
-        ), f"""
+        assert value in allowed, f"""
             Expected the value of "{key}" to be one of the allowed
             values and instead found it to be {value}.
             """
@@ -165,9 +159,7 @@ def is_not_null() -> Assertion:
     """Ensures that the value is not None."""
 
     def assert_is_not_null(key: str, value: typing.Any):
-        assert (
-            value is not None
-        ), f"""
+        assert value is not None, f"""
             Expected the value of "{key}" not to be None.
             """
 
@@ -178,9 +170,7 @@ def is_not(exclusions: typing.List[typing.Any]) -> Assertion:
     """Ensures that the value is not any of the specified argument values."""
 
     def assert_is_not(key: str, value: typing.Any):
-        assert (
-            value not in exclusions
-        ), f"""
+        assert value not in exclusions, f"""
             Expected the value of "{key}" not to be any of {exclusions},
             but it was "{value}".
             """
@@ -192,9 +182,7 @@ def is_instance_of(*args: typing.Any) -> Assertion:
     """Ensures that the value is one of the specified types."""
 
     def assert_is_instance_of(key: str, value: typing.Any):
-        assert isinstance(
-            value, args
-        ), f"""
+        assert isinstance(value, args), f"""
             Expected the value of "{key}" to be of one of the types
             {args}, but it was "{type(value)}" instead.
             """

@@ -18,42 +18,54 @@ from dynamo_io.mock._tables import MockTable  # noqa: F401
 from dynamo_io.mock._tables import Row  # noqa: F401
 
 
-def boolean(value: _typing.Union[bool, _typing.Any]) -> _typing.Optional[dict]:
+def boolean(value: _typing.Union[bool, _typing.Any]) -> dict | None:
     return _serializer.serialize(
         value,
-        definitions.Column(
-            name="",
-            data_type=definitions.BOOLEAN_TYPE,
+        _typing.cast(
+            definitions.AnyColumnType,
+            definitions.Column(
+                name="",
+                data_type=definitions.BOOLEAN_TYPE,
+            ),
         ),
     )
 
 
-def string(value: str) -> _typing.Optional[dict]:
+def string(value: str) -> dict | None:
     return _serializer.serialize(
         value,
-        definitions.Column(
-            name="",
-            data_type=definitions.STRING_TYPE,
+        _typing.cast(
+            definitions.AnyColumnType,
+            definitions.Column(
+                name="",
+                data_type=definitions.STRING_TYPE,
+            ),
         ),
     )
 
 
-def integer(value: _typing.Union[int, float]) -> _typing.Optional[dict]:
+def integer(value: _typing.Union[int, float]) -> dict | None:
     return _serializer.serialize(
         value,
-        definitions.Column(
-            name="",
-            data_type=definitions.INTEGER_TYPE,
+        _typing.cast(
+            definitions.AnyColumnType,
+            definitions.Column(
+                name="",
+                data_type=definitions.INTEGER_TYPE,
+            ),
         ),
     )
 
 
-def number(value: _typing.Union[int, float]) -> _typing.Optional[dict]:
+def number(value: _typing.Union[int, float]) -> dict | None:
     return _serializer.serialize(
         value,
-        definitions.Column(
-            name="",
-            data_type=definitions.FLOAT_TYPE,
+        _typing.cast(
+            definitions.AnyColumnType,
+            definitions.Column(
+                name="",
+                data_type=definitions.FLOAT_TYPE,
+            ),
         ),
     )
 
@@ -78,9 +90,12 @@ def timestamp(
     )
     return _serializer.serialize(
         value,
-        definitions.Column(
-            name="",
-            data_type=definitions.TIMESTAMP_TYPE,
+        _typing.cast(
+            definitions.AnyColumnType,
+            definitions.Column(
+                name="",
+                data_type=definitions.TIMESTAMP_TYPE,
+            ),
         ),
     )
 
@@ -96,9 +111,12 @@ def date_time(
     value = _datetime.datetime(year, month, day, hour, minute, second)
     return _serializer.serialize(
         value,
-        definitions.Column(
-            name="",
-            data_type=definitions.DATETIME_TYPE,
+        _typing.cast(
+            definitions.AnyColumnType,
+            definitions.Column(
+                name="",
+                data_type=definitions.DATETIME_TYPE,
+            ),
         ),
     )
 
