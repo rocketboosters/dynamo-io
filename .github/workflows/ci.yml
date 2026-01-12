@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  black-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+    - name: Install black
+      run: pip install black
+    - name: Check code formatting
+      run: black --check .
+
+  flake8-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+    - name: Install flake8
+      run: pip install flake8 flake8-black
+    - name: Run flake8
+      run: flake8 .
+
+  mypy-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+    - name: Install mypy
+      run: pip install mypy
+    - name: Run mypy
+      run: mypy . --install-types --non-interactive --ignore-missing-imports
+
+  radon-cc:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+    - name: Install radon
+      run: pip install radon
+    - name: Check cyclomatic complexity
+      run: |
+        radon cc .
+        radon cc . -j | grep -Eq "\"rank\": \"(C|D|F)\"" && exit 1 || exit 0
+
+  radon-mi:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+    - name: Install radon
+      run: pip install radon
+    - name: Check maintainability index
+      run: |
+        radon mi .
+        radon mi . -j | grep -Eq "\"rank\": \"(B|C|D|F)\"" && exit 1 || exit 0
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13', '3.14']
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Poetry
+      run: pip install poetry
+    - name: Install dependencies
+      run: poetry install
+    - name: Run tests with coverage
+      run: |
+        poetry run py.test \
+          --verbose \
+          --cov-report term-missing \
+          --cov-report xml \
+          --cov=. \
+          .
